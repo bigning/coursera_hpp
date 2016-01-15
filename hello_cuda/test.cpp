@@ -1,6 +1,6 @@
 #include <iostream>
-#include </usr/local/cuda/include/cuda.h>
-#include </usr/local/cuda/include/cuda_runtime.h>
+#include <cuda.h>
+#include <cuda_runtime.h>
 
 int main() {
     int device_count = 0;
