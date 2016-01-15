@@ -1,1 +1,1 @@
-Assignments of Heterogeneous Parallel Programming.
+Assignments of Heterogeneous Parallel Programming
