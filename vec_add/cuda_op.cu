@@ -24,7 +24,7 @@ void CUDAOp::vec_add_gpu(float* h_a, float* h_b, int n, float* h_c) {
     allocate_device_mem((void**)&d_c, size);
 
     // kernel code
-    dim3 dim_grid((n - 1) / 256, 1, 1);
+    dim3 dim_grid((n - 1) / 256 + 1, 1, 1);
     dim3 dim_block(256, 1, 1);
     vec_add_kernel<<<dim_grid, dim_block>>>(d_a, d_b, d_c, n);
 
