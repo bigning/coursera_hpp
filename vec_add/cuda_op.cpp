@@ -2,6 +2,7 @@
 #include "cuda_op.h"
 #include <cuda.h>
 #include <cuda_runtime.h>
+#include <time.h>
 
 void CUDAOp::set_use_gpu(bool use_gpu) {
     if (use_gpu == false) {
@@ -61,13 +62,20 @@ void CUDAOp::test_vec_add(int n) {
         h_c_gpu[i] = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
     }
     
+    clock_t t;
     // firsty use cpu to calculate
     set_use_gpu(false);
+    t = clock();
     vec_add_cpu(h_a, h_b, n, h_c_cpu);
+    t = clock() - t;
+    printf("[INFO]:cpu time: %f s\n", ((float)t) / CLOCKS_PER_SEC);
 
     // then use gpu to calculate
     set_use_gpu(true);
+    t = clock();
     vec_add_gpu(h_a, h_b, n, h_c_gpu);
+    t = clock() - t;
+    printf("[INFO]:gpu time: %f s\n", ((float)t) / CLOCKS_PER_SEC);
 
     int diff_index = is_two_vec_equal(h_c_cpu, h_c_gpu, n);
     if (diff_index == -1) {
