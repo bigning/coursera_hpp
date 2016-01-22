@@ -43,13 +43,12 @@ CUDAOp::CUDAOp(bool use_gpu) {
     use_gpu_ = true;
 }
 
-void CUDAOp::test_vec_add() {
+void CUDAOp::test_vec_add(int n) {
     float* h_a = NULL;
     float* h_b = NULL;
     float* h_c_cpu = NULL;
     float* h_c_gpu = NULL;
 
-    int n = 10000;
     h_a = new float[n];
     h_b = new float[n];
     h_c_cpu = new float[n];

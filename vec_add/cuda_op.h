@@ -9,7 +9,7 @@ public:
 
     // p_c[i] = p_a[i] + p_b[i]
     void vec_add(float* p_a, float* p_b, int n, float* p_c);
-    void test_vec_add();
+    void test_vec_add(int vec_size);
     
 private:
     void vec_add_cpu(float* p_a, float* p_b, int n, float* p_c);

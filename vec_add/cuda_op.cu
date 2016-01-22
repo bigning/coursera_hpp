@@ -36,4 +36,6 @@ void CUDAOp::vec_add_gpu(float* h_a, float* h_b, int n, float* h_c) {
     release_device_mem(d_a);
     release_device_mem(d_b);
     release_device_mem(d_c);
+    
+    cudaDeviceSynchronize();
 }
