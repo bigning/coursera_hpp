@@ -69,8 +69,13 @@ void CUDAOp::test_vec_add(int n) {
     set_use_gpu(true);
     vec_add_gpu(h_a, h_b, n, h_c_gpu);
 
-    if (is_two_vec_equal(h_c_cpu, h_c_gpu, n)) {
+    int diff_index = is_two_vec_equal(h_c_cpu, h_c_gpu, n);
+    if (diff_index == -1) {
         std::cout << "[INFO]: cpu result is equal to gpu result!" << std::endl;
+    }
+    else {
+        printf("[INFO]:a[%d](%f) + b[%d](%f) = \n ", diff_index, h_a[diff_index], diff_index, h_b[diff_index]);
+        printf("\t\tcpu:%f\n\t\tgpu:%f\n", h_c_cpu[diff_index], h_c_gpu[diff_index]);
     }
     
     delete[] h_a;
@@ -80,13 +85,13 @@ void CUDAOp::test_vec_add(int n) {
     
 }
 
-bool CUDAOp::is_two_vec_equal(float* p_a, float* p_b, int n) {
+int CUDAOp::is_two_vec_equal(float* p_a, float* p_b, int n) {
+    // returned positived number gives the first index at which the two input vector is not same, return -1 means the two vectors are same
     bool res = true;
     for (int i = 0; i < n; i++) {
         if (p_a[i] != p_b[i]) {
-            std::cout << "[INFO]: first inequality occurs at " << i << ", " << p_a[i] << " != " << p_b[i] << "!" << std::endl;
-            return false;
+            return i;
         }
     }
-    return true;
+    return -1;
 }
