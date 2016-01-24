@@ -23,6 +23,7 @@ int main() {
 	std::cout << "\tmax threads per block:" << device_prop.maxThreadsPerBlock << std::endl;
 	std::cout << "\tmulti processor count:"  << device_prop.multiProcessorCount << std::endl;
 	std::cout << "\tshare memory per block: " << device_prop.sharedMemPerBlock << std::endl;
+	std::cout << "\twarp size: " << device_prop.warpSize << std::endl;
     }
 
     return 1;
