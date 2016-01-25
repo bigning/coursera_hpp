@@ -6,6 +6,7 @@ https://www.coursera.org/course/hetero
 
 \+vector addition
 
+
 2016.01.25
 
 \+matrix multiply
