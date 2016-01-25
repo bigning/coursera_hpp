@@ -73,8 +73,8 @@ void matrix_multiply_kernel(float* pa, float* pb, float* pc, int m, int n, int k
 
 
         // do tile matrix mutliply
-        for (int k = 0; k < tile_width; k++) {
-            cvalue += a_block[threadIdx.y][k] * b_block[k][threadIdx.x];
+        for (int i = 0; i < tile_width; i++) {
+            cvalue += a_block[threadIdx.y][i] * b_block[i][threadIdx.x];
         }
         __syncthreads();
     }
@@ -91,7 +91,7 @@ void CUDAOp::matrix_multiply_gpu(float* pa, float* pb, float* pc, int m, int n, 
 
     allocate_and_copy_host2device((void**)&da, pa, m*k*sizeof(float));
     allocate_and_copy_host2device((void**)&db, pb, n*k*sizeof(float));
-    allocate_and_copy_host2device((void**)&dc, pc, m*n*sizeof(float));
+    allocate_device_mem((void**)&dc, m*n*sizeof(float));
 
     dim3 grid_size((m - 1) / TILE_WIDTH_FOR_MAT_MULTIPLY + 1, (n - 1) / TILE_WIDTH_FOR_MAT_MULTIPLY + 1, 1);
     dim3 block_size(TILE_WIDTH_FOR_MAT_MULTIPLY, TILE_WIDTH_FOR_MAT_MULTIPLY, 1);
