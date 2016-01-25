@@ -97,7 +97,7 @@ int CUDAOp::is_two_vec_equal(float* p_a, float* p_b, int n) {
     // returned positived number gives the first index at which the two input vector is not same, return -1 means the two vectors are same
     bool res = true;
     for (int i = 0; i < n; i++) {
-        if (p_a[i] != p_b[i]) {
+        if (abs(p_a[i] - p_b[i]) > 0.00001) {
             return i;
         }
     }
