@@ -81,7 +81,9 @@ void matrix_multiply_kernel(float* pa, float* pb, float* pc, int m, int n, int k
 
     int row_c = blockIdx.y * blockDim.y + threadIdx.y;
     int col_c = blockIdx.x * blockDim.x + threadIdx.x;
-    pc[row_c * n + col_c] = cvalue;
+    if (row_c < m && col_c < n) {
+        pc[row_c * n + col_c] = cvalue;
+    }
 }
 
 void CUDAOp::matrix_multiply_gpu(float* pa, float* pb, float* pc, int m, int n, int k) {
@@ -93,9 +95,10 @@ void CUDAOp::matrix_multiply_gpu(float* pa, float* pb, float* pc, int m, int n, 
     allocate_and_copy_host2device((void**)&db, pb, n*k*sizeof(float));
     allocate_device_mem((void**)&dc, m*n*sizeof(float));
 
-    dim3 grid_size((m - 1) / TILE_WIDTH_FOR_MAT_MULTIPLY + 1, (n - 1) / TILE_WIDTH_FOR_MAT_MULTIPLY + 1, 1);
+    dim3 grid_size((n - 1) / TILE_WIDTH_FOR_MAT_MULTIPLY + 1, (m - 1) / TILE_WIDTH_FOR_MAT_MULTIPLY + 1, 1);
     dim3 block_size(TILE_WIDTH_FOR_MAT_MULTIPLY, TILE_WIDTH_FOR_MAT_MULTIPLY, 1);
     matrix_multiply_kernel<<<grid_size, block_size>>>(da, db, dc, m, n, k);
+    cudaDeviceSynchronize();
 
     copy_device2host(pc, dc, m*n*sizeof(float));
 
@@ -103,5 +106,4 @@ void CUDAOp::matrix_multiply_gpu(float* pa, float* pb, float* pc, int m, int n, 
     release_device_mem(db);
     release_device_mem(dc);
 
-    cudaDeviceSynchronize();
 }

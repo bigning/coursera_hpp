@@ -133,16 +133,25 @@ void CUDAOp::test_matrix_multiply(int m, int n, int k) {
 
     for (int i = 0; i < m*k; i++) {
         pa[i] = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+        //pa[i] = 1;
     }
     for (int i = 0; i < k*n; i++) {
         pb[i] = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+        //pb[i] = 1;
     }
 
     set_use_gpu(false);
+    clock_t t;
+    t = clock();
     matrix_multiply(pa, pb, pc_cpu, m, n, k);
+    t = clock() - t;
+    std::cout << "[INFO]: matrix multiply cpu time: " << ((float)t) / CLOCKS_PER_SEC << std::endl;
 
     set_use_gpu(true);
+    t = clock();
     matrix_multiply(pa, pb, pc_gpu, m, n, k);
+    t = clock() - t;
+    std::cout << "[INFO]: matrix multiply gpu time: " << ((float)t) / CLOCKS_PER_SEC << std::endl;
 
     int diff_index = is_two_vec_equal(pc_cpu, pc_gpu, m*n);
     if (diff_index < 0) {
