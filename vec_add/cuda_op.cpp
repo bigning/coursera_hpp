@@ -103,3 +103,74 @@ int CUDAOp::is_two_vec_equal(float* p_a, float* p_b, int n) {
     }
     return -1;
 }
+
+void CUDAOp::matrix_multiply_cpu(float* pa, float* pb, float* pc, int m, int n, int k) {
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            float cvalue = 0.0; 
+            for (int t = 0; t < k; t++) {
+                cvalue += pa[i * k + t] * pb[t * n + j];
+            }
+            pc[i * n + j] = cvalue;
+        }
+    }
+}
+
+void CUDAOp::matrix_multiply(float* pa, float* pb, float* pc, int m, int n, int k) {
+    if (use_gpu_) {
+        matrix_multiply_gpu(pa, pb, pc, m, n, k);
+    }
+    else {
+        matrix_multiply_cpu(pa, pb, pc, m, n, k);
+    }
+}
+
+void CUDAOp::test_matrix_multiply(int m, int n, int k) {
+    float* pa = new float[m*k];
+    float* pb = new float[k*n];
+    float* pc_cpu = new float[m*n];
+    float* pc_gpu = new float[m*n];
+
+    for (int i = 0; i < m*k; i++) {
+        pa[i] = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+    }
+    for (int i = 0; i < k*n; i++) {
+        pb[i] = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+    }
+
+    set_use_gpu(false);
+    matrix_multiply(pa, pb, pc_cpu, m, n, k);
+
+    set_use_gpu(true);
+    matrix_multiply(pa, pb, pc_gpu, m, n, k);
+
+    int diff_index = is_two_vec_equal(pc_cpu, pc_gpu, m*n);
+    if (diff_index < 0) {
+        std::cout << "[INFO]: matrix multiply test succeed!" << std::endl;
+    }
+    else {
+        std::cout << "[INFO]: matrix multiply test failed, gpu reslut and cpu result different at " << diff_index << std::endl;
+    }
+
+    delete[] pa;
+    delete[] pb;
+    delete[] pc_cpu;
+    delete[] pc_gpu;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
