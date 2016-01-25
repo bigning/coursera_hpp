@@ -48,7 +48,7 @@ void matrix_multiply_kernel(float* pa, float* pb, float* pc, int m, int n, int k
 
     float cvalue = 0.0;
 
-    for (int tile_index = 0; tile_index < (n - 1) / tile_width + 1; tile_index++) {
+    for (int tile_index = 0; tile_index < (k - 1) / tile_width + 1; tile_index++) {
         // split matrix a and b to tiles
         int row_a = blockIdx.y * blockDim.y + threadIdx.y;
         int col_a = tile_index * tile_width + threadIdx.x;
