@@ -149,7 +149,7 @@ void CUDAOp::test_matrix_multiply(int m, int n, int k) {
         std::cout << "[INFO]: matrix multiply test succeed!" << std::endl;
     }
     else {
-        std::cout << "[INFO]: matrix multiply test failed, gpu reslut and cpu result different at " << diff_index << std::endl;
+        std::cout << "[INFO]: matrix multiply test failed, gpu reslut and cpu result different at " << diff_index << ", " << pc_cpu[diff_index] << "!=" << pc_gpu[diff_index] << std::endl;
     }
 
     delete[] pa;
